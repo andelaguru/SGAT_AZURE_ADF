@@ -93,7 +93,7 @@
 			}
 		],
 		"folder": {
-			"name": "Blob_to_Database"
+			"name": "Event_Based_Trigger"
 		},
 		"annotations": [],
 		"lastPublishTime": "2021-03-27T04:06:42Z"
