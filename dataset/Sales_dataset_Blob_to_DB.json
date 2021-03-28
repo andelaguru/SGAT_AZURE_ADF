@@ -5,6 +5,9 @@
 			"referenceName": "AzureSqlDatabase1",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Database_to_Blob"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
@@ -25,7 +28,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "SalesCategory"
+			"table": "Product"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
