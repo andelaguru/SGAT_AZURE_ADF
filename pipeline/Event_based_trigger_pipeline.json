@@ -86,7 +86,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Salescategory_DB",
+						"referenceName": "TGT_Event_BASED_DATALOAD",
 						"type": "DatasetReference"
 					}
 				]
