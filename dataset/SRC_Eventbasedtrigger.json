@@ -1,5 +1,5 @@
 {
-	"name": "Eventbasedtrigger",
+	"name": "SRC_Eventbasedtrigger",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
