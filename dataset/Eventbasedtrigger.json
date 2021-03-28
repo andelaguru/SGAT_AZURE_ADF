@@ -5,6 +5,9 @@
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Event_Based_Trigger_Dataset"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
