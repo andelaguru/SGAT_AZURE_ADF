@@ -1,0 +1,9 @@
+{
+	"name": "mysgatDatafactoryDemo",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "da942198-c2cc-40d6-bb24-fa2fd2bc2ed4",
+		"tenantId": "5f29e679-75b4-46bc-9828-d94ffa2d9529"
+	}
+}
