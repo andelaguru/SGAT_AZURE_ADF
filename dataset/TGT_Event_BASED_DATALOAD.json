@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Database_to_Blob"
+			"name": "Event_Based_Trigger_Dataset"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",

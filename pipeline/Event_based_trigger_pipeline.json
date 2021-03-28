@@ -80,7 +80,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Eventbasedtrigger",
+						"referenceName": "SRC_Eventbasedtrigger",
 						"type": "DatasetReference"
 					}
 				],
