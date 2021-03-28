@@ -1,0 +1,26 @@
+{
+	"name": "Event_Based_Trigger",
+	"properties": {
+		"description": "whenever i place my source file in Directory the pipeline has to trigger automatically",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Event_based_trigger_pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/democontainer1/blobs/",
+			"blobPathEndsWith": "Sales.csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/eca238a7-3dd0-4613-a4e3-0cbe76442e4c/resourceGroups/demotrainingRG/providers/Microsoft.Storage/storageAccounts/demostorageaccountsample",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
