@@ -13,6 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "Sales.csv",
 				"folderPath": "Demo1",
 				"container": "myadfdemo1container1"
 			},
