@@ -12,17 +12,56 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "ProductCategoryID",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "ParentProductCategoryID",
+				"name": "ProductID",
 				"type": "int",
 				"precision": 10
 			},
 			{
 				"name": "Name",
+				"type": "varchar"
+			},
+			{
+				"name": "ProductNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Color",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StandardCost",
+				"type": "varchar"
+			},
+			{
+				"name": "ListPrice",
+				"type": "varchar"
+			},
+			{
+				"name": "Size",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Weight",
+				"type": "varchar"
+			},
+			{
+				"name": "ProductCategoryID",
+				"type": "varchar"
+			},
+			{
+				"name": "ProductModelID",
+				"type": "varchar"
+			},
+			{
+				"name": "SellStartDate",
+				"type": "varchar"
+			},
+			{
+				"name": "SellEndDate",
+				"type": "varchar"
+			},
+			{
+				"name": "ModifiedDate",
 				"type": "varchar"
 			}
 		],
