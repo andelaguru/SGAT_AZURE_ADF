@@ -10,6 +10,9 @@
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
+		},
+		"Event_Based_Trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/eca238a7-3dd0-4613-a4e3-0cbe76442e4c/resourceGroups/demotrainingRG/providers/Microsoft.Storage/storageAccounts/demostorageaccountsample"
 		}
 	}
 }

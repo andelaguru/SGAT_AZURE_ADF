@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
+		"Event_Based_Trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eca238a7-3dd0-4613-a4e3-0cbe76442e4c/resourceGroups/demotrainingRG/providers/Microsoft.Storage/storageAccounts/demostorageaccountsample"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -47,6 +51,9 @@
 					},
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"Event_Based_Trigger_properties_typeProperties_scope": {
+						"value": "[parameters('Event_Based_Trigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
