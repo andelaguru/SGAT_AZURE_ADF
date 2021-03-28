@@ -1479,7 +1479,7 @@
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
 					"blobPathBeginsWith": "/democontainer1/blobs/",
-					"blobPathEndsWith": "Demo1/Sales.csv",
+					"blobPathEndsWith": "Sales.csv",
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('Event_Based_Trigger_properties_typeProperties_scope')]",
 					"events": [
