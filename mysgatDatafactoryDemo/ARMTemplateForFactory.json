@@ -1464,9 +1464,9 @@
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "whenever i place my source file in Directory the pipeline has to trigger automatically",
+				"description": "whenever i place my source file in Directory the pipeline has to trigger automatically yes",
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
