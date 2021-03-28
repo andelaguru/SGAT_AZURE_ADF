@@ -80,7 +80,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SalesCategory_dataset",
+						"referenceName": "Eventbasedtrigger",
 						"type": "DatasetReference"
 					}
 				],
