@@ -4,7 +4,7 @@
 		"description": "This is to copy blob file to database",
 		"activities": [
 			{
-				"name": "m_load_blob_to_database123",
+				"name": "m_event_based_data_load",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
