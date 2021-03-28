@@ -15,8 +15,171 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ProductID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ProductID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ProductNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Color",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Color",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "StandardCost",
+									"type": "String"
+								},
+								"sink": {
+									"name": "StandardCost",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ListPrice",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ListPrice",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Size",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Size",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Weight",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Weight",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductCategoryID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ProductCategoryID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductModelID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ProductModelID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SellStartDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SellStartDate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SellEndDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SellEndDate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Sales_dataset_Blob_to_DB",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Dest_Blob_Dataset",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
