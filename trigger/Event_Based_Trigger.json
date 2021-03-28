@@ -1,7 +1,7 @@
 {
 	"name": "Event_Based_Trigger",
 	"properties": {
-		"description": "whenever i place my source file in Directory the pipeline has to trigger automatically",
+		"description": "whenever i place my source file in Directory the pipeline has to trigger automatically yes",
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
