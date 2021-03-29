@@ -26,12 +26,46 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE [@{pipeline().parameters.TGT_SCHEMA_NAME}].[@{pipeline().parameters.TGT_TABLE_NAME}]",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "SRC_SALES_Parameterized",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"SRC_Input_file": {
+								"value": "@pipeline().parameters.SRC_INPUT_FILE",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "TGT_PRODUCT_PARAMETERIZED",
+						"type": "DatasetReference",
+						"parameters": {
+							"TGT_TABLE_NAME": {
+								"value": "@pipeline().parameters.TGT_TABLE_NAME",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
@@ -41,6 +75,9 @@
 				"type": "string"
 			},
 			"TGT_TABLE_NAME": {
+				"type": "string"
+			},
+			"TGT_SCHEMA_NAME": {
 				"type": "string"
 			}
 		},
