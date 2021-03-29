@@ -1,0 +1,20 @@
+{
+	"name": "TGT_PRODUCT_PARAMETERIZED",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TGT_TABLE_NAME": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Parameterized_pipelines_Dataset"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
