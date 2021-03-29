@@ -1,9 +1,9 @@
 {
-	"name": "pipeline2",
+	"name": "Parameterized_Copy_blob_to_DB",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Parameterized_copy_activity",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -15,10 +15,35 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "SRC_SALES_Parameterized",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
+		"parameters": {
+			"SRC_INPUT_FILE": {
+				"type": "string"
+			},
+			"TGT_TABLE_NAME": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Parameterised_Pipelines"
 		},
