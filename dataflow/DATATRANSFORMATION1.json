@@ -29,7 +29,7 @@
 					"name": "AGGMYMOVIESDB"
 				}
 			],
-			"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as string,\n\t\tRating as string,\n\t\t{Rotton Tomato} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> mymoviescsvsrc\nmymoviescsvsrc filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> FLTmymoviesdb\nFLTmymoviesdb aggregate(Avgcomedyrating = avg(toInteger(Rating))) ~> AGGMYMOVIESDB\nAGGMYMOVIESDB sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['avgratingofcomedymovies'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MYMOVIESRATING"
+			"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as string,\n\t\tRating as string,\n\t\t{Rotton Tomato} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> mymoviescsvsrc\nmymoviescsvsrc filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> FLTmymoviesdb\nFLTmymoviesdb aggregate(Avgcomedyrating = avg(toInteger(Rating))) ~> AGGMYMOVIESDB\nAGGMYMOVIESDB sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['avgratingofcomedymovies'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MYMOVIESRATING"
 		}
 	}
 }
