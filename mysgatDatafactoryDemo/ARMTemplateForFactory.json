@@ -442,6 +442,53 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Data_Transformation_flow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Movies_avg_rating",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DATATRANSFORMATION1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"mymoviescsvsrc": {},
+									"MYMOVIESRATING": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"runConcurrently": true
+						}
+					}
+				],
+				"folder": {
+					"name": "TRANSFORMATION_PIPELINES"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DATATRANSFORMATION1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Event_based_trigger_pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -668,6 +715,101 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SRC_Eventbasedtrigger')]",
 				"[concat(variables('factoryId'), '/datasets/TGT_Event_BASED_DATALOAD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parameterized_Copy_blob_to_DB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Parameterized_copy_activity",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE [@{pipeline().parameters.TGT_SCHEMA_NAME}].[@{pipeline().parameters.TGT_TABLE_NAME}]",
+									"type": "Expression"
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SRC_SALES_Parameterized",
+								"type": "DatasetReference",
+								"parameters": {
+									"SRC_Input_file": {
+										"value": "@pipeline().parameters.SRC_INPUT_FILE",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TGT_PRODUCT_PARAMETERIZED",
+								"type": "DatasetReference",
+								"parameters": {
+									"TGT_TABLE_NAME": {
+										"value": "@pipeline().parameters.TGT_TABLE_NAME",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"SRC_INPUT_FILE": {
+						"type": "string"
+					},
+					"TGT_TABLE_NAME": {
+						"type": "string"
+					},
+					"TGT_SCHEMA_NAME": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Parameterised_Pipelines"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SRC_SALES_Parameterized')]",
+				"[concat(variables('factoryId'), '/datasets/TGT_PRODUCT_PARAMETERIZED')]"
 			]
 		},
 		{
@@ -1047,6 +1189,99 @@
 					"quoteChar": "\""
 				},
 				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SRC_SALES_Parameterized')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SRC_Input_file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Parameterized_pipelines_Dataset"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SRC_Input_file",
+							"type": "Expression"
+						},
+						"folderPath": "Demo1",
+						"container": "myadfdemo1container1"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "String"
+					},
+					{
+						"name": "Color",
+						"type": "String"
+					},
+					{
+						"name": "StandardCost",
+						"type": "String"
+					},
+					{
+						"name": "ListPrice",
+						"type": "String"
+					},
+					{
+						"name": "Size",
+						"type": "String"
+					},
+					{
+						"name": "Weight",
+						"type": "String"
+					},
+					{
+						"name": "ProductCategoryID",
+						"type": "String"
+					},
+					{
+						"name": "ProductModelID",
+						"type": "String"
+					},
+					{
+						"name": "SellStartDate",
+						"type": "String"
+					},
+					{
+						"name": "SellEndDate",
+						"type": "String"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
@@ -1433,6 +1668,91 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/TGT_PRODUCT_PARAMETERIZED')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TGT_TABLE_NAME": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Parameterized_pipelines_Dataset"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().TGT_TABLE_NAME",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/srcmoviesfile')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "moviesDB.csv",
+						"container": "myadfdemo1container1"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1492,102 +1812,48 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parameterized_Copy_blob_to_DB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DATATRANSFORMATION1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Parameterized_copy_activity",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "srcmoviesfile",
+								"type": "DatasetReference"
 							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": {
-									"value": "TRUNCATE TABLE [@{pipeline().parameters.TGT_SCHEMA_NAME}].[@{pipeline().parameters.TGT_TABLE_NAME}]",
-									"type": "Expression"
-								},
-								"disableMetricsCollection": false
+							"name": "mymoviescsvsrc"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "TGTMOVIESRATING",
+								"type": "DatasetReference"
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"name": "MYMOVIESRATING"
+						}
+					],
+					"transformations": [
+						{
+							"name": "FLTmymoviesdb"
 						},
-						"inputs": [
-							{
-								"referenceName": "SRC_SALES_Parameterized",
-								"type": "DatasetReference",
-								"parameters": {
-									"SRC_Input_file": {
-										"value": "@pipeline().parameters.SRC_INPUT_FILE",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "TGT_PRODUCT_PARAMETERIZED",
-								"type": "DatasetReference",
-								"parameters": {
-									"TGT_TABLE_NAME": {
-										"value": "@pipeline().parameters.TGT_TABLE_NAME",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"SRC_INPUT_FILE": {
-						"type": "string"
-					},
-					"TGT_TABLE_NAME": {
-						"type": "string"
-					},
-					"TGT_SCHEMA_NAME": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Parameterised_Pipelines"
-				},
-				"annotations": []
+						{
+							"name": "AGGMYMOVIESDB"
+						}
+					],
+					"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as string,\n\t\tRating as string,\n\t\t{Rotton Tomato} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> mymoviescsvsrc\nmymoviescsvsrc filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> FLTmymoviesdb\nFLTmymoviesdb aggregate(Avgcomedyrating = avg(toInteger(Rating))) ~> AGGMYMOVIESDB\nAGGMYMOVIESDB sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['avgratingofcomedymovies'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MYMOVIESRATING"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SRC_SALES_Parameterized')]",
-				"[concat(variables('factoryId'), '/datasets/TGT_PRODUCT_PARAMETERIZED')]"
+				"[concat(variables('factoryId'), '/datasets/srcmoviesfile')]",
+				"[concat(variables('factoryId'), '/datasets/TGTMOVIESRATING')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SRC_SALES_Parameterized')]",
+			"name": "[concat(parameters('factoryName'), '/TGTMOVIESRATING')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1595,120 +1861,21 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"SRC_Input_file": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Parameterized_pipelines_Dataset"
-				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().SRC_Input_file",
-							"type": "Expression"
-						},
-						"folderPath": "Demo1",
-						"container": "myadfdemo1container1"
+						"container": "sinkcontainermoviesdb"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
-					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"name": "ProductID",
-						"type": "String"
-					},
-					{
-						"name": "Name",
-						"type": "String"
-					},
-					{
-						"name": "ProductNumber",
-						"type": "String"
-					},
-					{
-						"name": "Color",
-						"type": "String"
-					},
-					{
-						"name": "StandardCost",
-						"type": "String"
-					},
-					{
-						"name": "ListPrice",
-						"type": "String"
-					},
-					{
-						"name": "Size",
-						"type": "String"
-					},
-					{
-						"name": "Weight",
-						"type": "String"
-					},
-					{
-						"name": "ProductCategoryID",
-						"type": "String"
-					},
-					{
-						"name": "ProductModelID",
-						"type": "String"
-					},
-					{
-						"name": "SellStartDate",
-						"type": "String"
-					},
-					{
-						"name": "SellEndDate",
-						"type": "String"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TGT_PRODUCT_PARAMETERIZED')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TGT_TABLE_NAME": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Parameterized_pipelines_Dataset"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": {
-						"value": "@dataset().TGT_TABLE_NAME",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		}
 	]
