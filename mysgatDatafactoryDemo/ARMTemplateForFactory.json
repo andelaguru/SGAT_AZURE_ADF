@@ -1590,6 +1590,32 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/TGTMOVIESRATING')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "sinkcontainermoviesdb"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/TGT_Event_BASED_DATALOAD')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1853,7 +1879,100 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TGTMOVIESRATING')]",
+			"name": "[concat(parameters('factoryName'), '/JoinerDataTransformation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "JoinDatatransfomationpipeline",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "joiner",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SRCsalesff": {},
+									"SRCsalescategoryff": {},
+									"TGTJOINSALESANDCAT": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "JoinerDataTransformation"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/joiner')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/joiner')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SRCSALES",
+								"type": "DatasetReference"
+							},
+							"name": "SRCsalesff"
+						},
+						{
+							"dataset": {
+								"referenceName": "SalesCategory_dataset",
+								"type": "DatasetReference"
+							},
+							"name": "SRCsalescategoryff"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "TGTMOVIESRATING",
+								"type": "DatasetReference"
+							},
+							"name": "TGTJOINSALESANDCAT"
+						}
+					],
+					"transformations": [
+						{
+							"name": "JOINSALESCATEGORY"
+						}
+					],
+					"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as string,\n\t\tListPrice as string,\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string,\n\t\tSellStartDate as string,\n\t\tSellEndDate as string,\n\t\tModifiedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SRCsalesff\nsource(output(\n\t\tProductCategoryID as string,\n\t\tParentProductCategoryID as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SRCsalescategoryff\nSRCsalesff, SRCsalescategoryff join(SRCsalesff@ProductCategoryID == SRCsalescategoryff@ProductCategoryID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JOINSALESCATEGORY\nJOINSALESCATEGORY sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Joineroutputofsalesandcateg'],\n\tmapColumn(\n\t\tProductID,\n\t\tName = SRCsalesff@Name,\n\t\tProductNumber,\n\t\tColor,\n\t\tStandardCost,\n\t\tListPrice,\n\t\tSize,\n\t\tWeight,\n\t\tProductCategoryID = SRCsalesff@ProductCategoryID,\n\t\tProductModelID,\n\t\tSellStartDate,\n\t\tSellEndDate,\n\t\tModifiedDate,\n\t\tProductCategoryID = SRCsalescategoryff@ProductCategoryID,\n\t\tParentProductCategoryID,\n\t\tName = SRCsalescategoryff@Name\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> TGTJOINSALESANDCAT"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SRCSALES')]",
+				"[concat(variables('factoryId'), '/datasets/SalesCategory_dataset')]",
+				"[concat(variables('factoryId'), '/datasets/TGTMOVIESRATING')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SRCSALES')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1866,13 +1985,68 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "sinkcontainermoviesdb"
+						"fileName": "Sales.csv",
+						"container": "myadfdemo1container1"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
+					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "String"
+					},
+					{
+						"name": "Color",
+						"type": "String"
+					},
+					{
+						"name": "StandardCost",
+						"type": "String"
+					},
+					{
+						"name": "ListPrice",
+						"type": "String"
+					},
+					{
+						"name": "Size",
+						"type": "String"
+					},
+					{
+						"name": "Weight",
+						"type": "String"
+					},
+					{
+						"name": "ProductCategoryID",
+						"type": "String"
+					},
+					{
+						"name": "ProductModelID",
+						"type": "String"
+					},
+					{
+						"name": "SellStartDate",
+						"type": "String"
+					},
+					{
+						"name": "SellEndDate",
+						"type": "String"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
