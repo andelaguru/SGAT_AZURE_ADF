@@ -19,13 +19,17 @@
 					"name": "SRCsalescategoryff"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "TGTJOINSALESANDCAT"
+				}
+			],
 			"transformations": [
 				{
 					"name": "JOINSALESCATEGORY"
 				}
 			],
-			"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as string,\n\t\tListPrice as string,\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string,\n\t\tSellStartDate as string,\n\t\tSellEndDate as string,\n\t\tModifiedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SRCsalesff\nsource(output(\n\t\tProductCategoryID as string,\n\t\tParentProductCategoryID as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SRCsalescategoryff\nSRCsalesff, SRCsalescategoryff join(SRCsalesff@ProductCategoryID == SRCsalescategoryff@ProductCategoryID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JOINSALESCATEGORY"
+			"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as string,\n\t\tListPrice as string,\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string,\n\t\tSellStartDate as string,\n\t\tSellEndDate as string,\n\t\tModifiedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SRCsalesff\nsource(output(\n\t\tProductCategoryID as string,\n\t\tParentProductCategoryID as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SRCsalescategoryff\nSRCsalesff, SRCsalescategoryff join(SRCsalesff@ProductCategoryID == SRCsalescategoryff@ProductCategoryID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JOINSALESCATEGORY\nJOINSALESCATEGORY sink(skipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> TGTJOINSALESANDCAT"
 		}
 	}
 }
