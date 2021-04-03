@@ -105,7 +105,7 @@
 									},
 									"RecInsertDate": {
 										"value": {
-											"value": "@convertToUtc(utcnow(),'Indian Standard Time')",
+											"value": "@convertFromUtc(utcnow(),'Pacific Standard Time')",
 											"type": "Expression"
 										},
 										"type": "String"
