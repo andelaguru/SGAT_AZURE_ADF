@@ -116,25 +116,6 @@
 								"referenceName": "AzureSqlDatabase1",
 								"type": "LinkedServiceReference"
 							}
-						},
-						{
-							"name": "orchestratepart2-IFCONTROL",
-							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "orchest-part2-foreach-storeproce",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"expression": {
-									"value": "@equals(0,0)",
-									"type": "Expression"
-								}
-							}
 						}
 					]
 				}
