@@ -55,6 +55,70 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "FORLOOP-READ-FILES",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "FLT_SALES_FILE_ORCHESPART2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('FLT_SALES_FILE_ORCHESPART2').output.Value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "orchest-part2-foreach-storeproce",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[STORE_FILEMETADATA]",
+								"storedProcedureParameters": {
+									"FileName": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"LastModifiedDate": {
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"RecInsertDate": {
+										"value": {
+											"value": "@convertToUtc(utcnow(),'Indian Standard Time')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
 			}
 		],
 		"folder": {
