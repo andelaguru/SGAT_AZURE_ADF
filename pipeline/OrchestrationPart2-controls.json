@@ -32,6 +32,29 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "FLT_SALES_FILE_ORCHESPART2",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Orchestrate-part2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Orchestrate-part2').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith( item().name ,'Sales')\n",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"folder": {
