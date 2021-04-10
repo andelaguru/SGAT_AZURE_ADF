@@ -1,0 +1,35 @@
+{
+	"name": "sparkclusterdemofileparameters",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sparkclusterdemofileparameters",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "sparkclusterdemo"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "input_data_spark_Location.txt",
+				"container": "sparkdemoiofiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "inputFilelocation",
+				"type": "String"
+			},
+			{
+				"name": "outputfilelication",
+				"type": "String"
+			}
+		]
+	}
+}
