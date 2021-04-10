@@ -100,6 +100,10 @@
 				"typeProperties": {
 					"rootPath": "sparkdemoiofiles",
 					"entryFilePath": "WordCount_Spark.py",
+					"arguments": [
+						"@variables('OutputFileLocation')",
+						"@variables('InputFileLocation')"
+					],
 					"getDebugInfo": "Always",
 					"sparkJobLinkedService": {
 						"referenceName": "sparkclusterdemofileparameters",
