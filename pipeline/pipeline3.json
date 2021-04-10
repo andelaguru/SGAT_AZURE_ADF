@@ -101,8 +101,8 @@
 					"rootPath": "sparkdemoiofiles",
 					"entryFilePath": "WordCount_Spark.py",
 					"arguments": [
-						"@variables('OutputFileLocation')",
-						"@variables('InputFileLocation')"
+						"@variables('InputFileLocation')",
+						"@variables('OutputFileLocation')"
 					],
 					"getDebugInfo": "Always",
 					"sparkJobLinkedService": {
