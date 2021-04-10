@@ -15,13 +15,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
-		"HDInsightcluster_password": {
+		"sparkclusterdemofileparameters_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'HDInsightcluster'"
-		},
-		"HDInsightcluster_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "andelaguru"
+			"metadata": "Secure string for 'connectionString' of 'sparkclusterdemofileparameters'"
 		}
 	},
 	"variables": {
@@ -51,6 +47,19 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sparkclusterdemofileparameters')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('sparkclusterdemofileparameters_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -966,31 +975,6 @@
 						"type": "String"
 					}
 				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/HDInsightcluster')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "HDInsight",
-				"typeProperties": {
-					"clusterUri": "https://sgatmyhdclusterandelaguru.azurehdinsight.net",
-					"userName": "[parameters('HDInsightcluster_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('HDInsightcluster_password')]"
-					},
-					"isEspEnabled": false,
-					"linkedServiceName": {
-						"referenceName": "AzureBlobStorage1",
-						"type": "LinkedServiceReference"
-					}
-				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"

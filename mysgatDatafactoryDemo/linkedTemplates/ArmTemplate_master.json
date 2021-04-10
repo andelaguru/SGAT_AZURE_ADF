@@ -19,13 +19,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'HDInsightcluster'"
 		},
-		"Event_Based_Trigger_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/eca238a7-3dd0-4613-a4e3-0cbe76442e4c/resourceGroups/demotrainingRG/providers/Microsoft.Storage/storageAccounts/demostorageaccountsample"
+		"sparkclusterdemofileparameters_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sparkclusterdemofileparameters'"
 		},
 		"HDInsightcluster_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "andelaguru"
+		},
+		"Event_Based_Trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/eca238a7-3dd0-4613-a4e3-0cbe76442e4c/resourceGroups/demotrainingRG/providers/Microsoft.Storage/storageAccounts/demostorageaccountsample"
 		},
 		"containerUri": {
 			"type": "string",
@@ -60,11 +64,8 @@
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
-					"HDInsightcluster_password": {
-						"value": "[parameters('HDInsightcluster_password')]"
-					},
-					"HDInsightcluster_properties_typeProperties_userName": {
-						"value": "[parameters('HDInsightcluster_properties_typeProperties_userName')]"
+					"sparkclusterdemofileparameters_connectionString": {
+						"value": "[parameters('sparkclusterdemofileparameters_connectionString')]"
 					}
 				}
 			},
@@ -83,6 +84,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"HDInsightcluster_password": {
+						"value": "[parameters('HDInsightcluster_password')]"
+					},
+					"HDInsightcluster_properties_typeProperties_userName": {
+						"value": "[parameters('HDInsightcluster_properties_typeProperties_userName')]"
 					},
 					"Event_Based_Trigger_properties_typeProperties_scope": {
 						"value": "[parameters('Event_Based_Trigger_properties_typeProperties_scope')]"
