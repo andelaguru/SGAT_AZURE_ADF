@@ -33,6 +33,14 @@
 				}
 			}
 		],
+		"variables": {
+			"InputFileLocation": {
+				"type": "String"
+			},
+			"OutputFileLocation": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "Sparkclusterdemo"
 		},
