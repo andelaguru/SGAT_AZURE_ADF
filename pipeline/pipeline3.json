@@ -31,6 +31,46 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "SetvarforInputfilelocation",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "sparkclusterlookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "InputFileLocation",
+					"value": {
+						"value": "@activity('sparkclusterlookup').output.firstRow.inputFilelocation",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SetvarforOutputlocation",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "sparkclusterlookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "OutputFileLocation",
+					"value": {
+						"value": "@activity('sparkclusterlookup').output.firstRow.outputfilelication",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
